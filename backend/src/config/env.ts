@@ -29,6 +29,10 @@ const envSchema = z.object({
     .string()
     .default("http://localhost:5173"),
 
+  SCANNER_MODE: z
+    .enum(["auto", "direct", "docker"])
+    .default("auto"),
+
   JWT_ACCESS_SECRET: z
     .string()
     .min(

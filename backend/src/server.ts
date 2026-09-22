@@ -7,7 +7,7 @@ async function startServer(): Promise<void> {
   try {
     await connectMongoDB();
 
-    app.listen(env.PORT, () => {
+    app.listen(env.PORT, "0.0.0.0", () => {
       console.log(
         `JobGuard AI API running on port ${env.PORT}`,
       );

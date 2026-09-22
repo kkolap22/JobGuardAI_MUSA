@@ -1,4 +1,5 @@
-const API_BASE_URL = (import.meta.env.VITE_API_URL || "http://localhost:5000/api/v1").replace(/\/+$/, "");
+const rawApiUrl = (import.meta.env.VITE_API_URL || "http://localhost:5000/api/v1").trim().replace(/\/+$/, "");
+const API_BASE_URL = rawApiUrl.endsWith("/api/v1") ? rawApiUrl : `${rawApiUrl}/api/v1`;
 const ACCESS_TOKEN = "jobguard_access_token";
 const REFRESH_TOKEN = "jobguard_refresh_token";
 const USER = "jobguard_user";
@@ -28,11 +29,11 @@ export const api = {
     if (config.body && typeof config.body === "object") config.body = JSON.stringify(config.body);
     let response;
     try { response = await fetch(`${API_BASE_URL}${endpoint.startsWith("/") ? endpoint : `/${endpoint}`}`, config); }
-    catch { throw new Error("Backend se connection nahi ho pa raha. Backend ko port 5000 par start karein."); }
+    catch { throw new Error("Unable to connect to JobGuard backend. If the backend is waking up (Render free tier), please wait 30-50 seconds and try again."); }
     if (response.status === 401 && canRefresh && this.getRefreshToken() && !endpoint.includes("/auth/")) {
       if (await this.refreshToken()) return this.request(endpoint, options, false);
       this.clearAuthSession();
-      throw new Error("Session expire ho gaya. Dobara login karein.");
+      throw new Error("Your session has expired. Please log in again.");
     }
     const data = await response.json().catch(() => ({}));
     if (!response.ok) {

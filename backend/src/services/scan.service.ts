@@ -51,6 +51,9 @@ import {
   analyzeEvidenceWithAI,
 } from "./ai.service.js";
 
+import { runWebsiteScan } from "./scanner.service.js";
+import type { ScanEvidence } from "./types.js";
+import { env } from "../config/env.js";
 import { logger } from "../utils/logger.js";
 
 const dockerService =
@@ -141,26 +144,43 @@ async function runScan(
       },
     );
 
-    const dockerResult =
-      await dockerService.runScan({
-        scanId,
+    let evidence: ScanEvidence;
+    const mode = env.SCANNER_MODE;
 
-        jobUrl:
-          scan.jobUrl,
+    if (mode === "direct") {
+      evidence = await runWebsiteScan(scan.jobUrl);
+    } else if (mode === "docker") {
+      const dockerResult = await dockerService.runScan({
+        scanId,
+        jobUrl: scan.jobUrl,
       });
 
-    if (
-      !dockerResult.success ||
-      !dockerResult.evidence
-    ) {
-      throw new Error(
-        dockerResult.error ??
-          "Scanner failed",
-      );
-    }
+      if (!dockerResult.success || !dockerResult.evidence) {
+        throw new Error(dockerResult.error ?? "Scanner failed");
+      }
 
-    const evidence =
-      dockerResult.evidence;
+      evidence = dockerResult.evidence;
+    } else {
+      // "auto" mode: attempt docker container scan first, fallback to in-process Playwright
+      try {
+        const dockerResult = await dockerService.runScan({
+          scanId,
+          jobUrl: scan.jobUrl,
+        });
+
+        if (!dockerResult.success || !dockerResult.evidence) {
+          throw new Error(dockerResult.error ?? "Docker scanner returned failure");
+        }
+
+        evidence = dockerResult.evidence;
+      } catch (dockerErr) {
+        logger.warn(
+          { error: dockerErr, scanId },
+          "Docker scanner unavailable or failed; executing direct Playwright scan instead",
+        );
+        evidence = await runWebsiteScan(scan.jobUrl);
+      }
+    }
 
     await Scan.updateOne(
       {

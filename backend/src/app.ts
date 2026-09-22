@@ -16,8 +16,13 @@ import { errorMiddleware } from "./middleware/error.middleware.js";
 
 const app = express();
 
+const configuredOrigins = (env.CORS_ORIGIN || "")
+  .split(",")
+  .map((origin) => origin.trim().replace(/\/+$/, ""))
+  .filter(Boolean);
+
 const allowedOrigins = new Set([
-  env.CORS_ORIGIN,
+  ...configuredOrigins,
   ...(env.NODE_ENV === "development"
     ? [
         "http://localhost:5173",
@@ -26,7 +31,11 @@ const allowedOrigins = new Set([
     : []),
 ]);
 
-app.use(helmet());
+app.use(
+  helmet({
+    crossOriginResourcePolicy: { policy: "cross-origin" },
+  }),
+);
 
 app.use(
   cors({
@@ -36,7 +45,26 @@ app.use(
         return;
       }
 
-      callback(null, allowedOrigins.has(origin));
+      const cleanOrigin = origin.replace(/\/+$/, "");
+
+      if (allowedOrigins.has(cleanOrigin) || allowedOrigins.has("*")) {
+        callback(null, true);
+        return;
+      }
+
+      // Allow Vercel preview/production deployments if vercel.app is permitted
+      const hasVercelConfigured = configuredOrigins.some((o) =>
+        o.includes("vercel.app"),
+      );
+      if (
+        hasVercelConfigured &&
+        /^https:\/\/[a-z0-9-]+(\.vercel\.app)$/i.test(cleanOrigin)
+      ) {
+        callback(null, true);
+        return;
+      }
+
+      callback(null, false);
     },
     credentials: true,
   }),
