@@ -29,7 +29,11 @@ const allowedOrigins = new Set([
         "http://127.0.0.1:5173",
       ]
     : []),
+  "https://job-guardai-musa.vercel.app",
 ]);
+
+const isVercelOrigin = (origin: string) =>
+  /^https:\/\/([a-z0-9-]+\.)*vercel\.app$/i.test(origin);
 
 app.use(
   helmet({
@@ -56,10 +60,12 @@ app.use(
       const hasVercelConfigured = configuredOrigins.some((o) =>
         o.includes("vercel.app"),
       );
-      if (
-        hasVercelConfigured &&
-        /^https:\/\/[a-z0-9-]+(\.vercel\.app)$/i.test(cleanOrigin)
-      ) {
+      if (hasVercelConfigured && isVercelOrigin(cleanOrigin)) {
+        callback(null, true);
+        return;
+      }
+
+      if (isVercelOrigin(cleanOrigin)) {
         callback(null, true);
         return;
       }

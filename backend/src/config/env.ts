@@ -27,7 +27,9 @@ const envSchema = z.object({
 
   CORS_ORIGIN: z
     .string()
-    .default("http://localhost:5173"),
+    .default(
+      "http://localhost:5173,https://job-guardai-musa.vercel.app",
+    ),
 
   SCANNER_MODE: z
     .enum(["auto", "direct", "docker"])
