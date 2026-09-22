@@ -1,7 +1,7 @@
 // Set `window.JOBGUARD_API_BASE_URL` before this module loads when the API is
 // hosted elsewhere. Local development continues to use the backend default.
 const API_BASE_URL = (
-  window.JOBGUARD_API_BASE_URL || "http://localhost:5000/api/v1"
+  window.JOBGUARD_API_BASE_URL || "https://jobguard-backend-6luk.onrender.com/api/v1"
 ).replace(/\/+$/, "");
 
 const STORAGE_KEYS = {
