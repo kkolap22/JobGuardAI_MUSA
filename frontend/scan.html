@@ -1,0 +1,1208 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JobGuard+ | Scan Job</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
+
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,500,0,0"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="scan.css">
+</head>
+<style>
+    :root {
+        --green: #08ad50;
+        --dark-green: #078e42;
+        --light: #f1fff6;
+        --text: #101828;
+        --muted: #667085;
+        --border: #e4e7ec;
+    }
+
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    body {
+        font-family: "Inter", sans-serif;
+        color: var(--text);
+        background: #ffffff;
+    }
+
+    a {
+        text-decoration: none;
+        color: inherit;
+    }
+
+
+    /* NAVBAR */
+
+    .navbar {
+        height: 76px;
+        padding: 0 6%;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        background: rgba(255, 255, 255, 0.9);
+        backdrop-filter: blur(15px);
+        border-bottom: 1px solid #edf0ee;
+        position: sticky;
+        top: 0;
+        z-index: 20;
+    }
+
+    .logo {
+        font-family: "Space Grotesk", Inter, sans-serif;
+        font-size: 24px;
+        font-weight: 700;
+        letter-spacing: -1.2px;
+    }
+
+    .logo span {
+        color: var(--green);
+    }
+
+    .nav-links {
+        display: flex;
+        gap: 34px;
+        font-family: "Space Grotesk", Inter, sans-serif;
+        font-size: 13px;
+        font-weight: 600;
+        letter-spacing: 0.04em;
+        color: #344054;
+    }
+
+    .nav-links a {
+        position: relative;
+        padding: 8px 2px;
+        transition: 0.25s ease;
+    }
+
+    .nav-links a::after {
+        content: "";
+        position: absolute;
+        left: 0;
+        bottom: 0;
+        width: 0;
+        height: 2px;
+        border-radius: 2px;
+        background: var(--green);
+        transition: 0.25s ease;
+    }
+
+    .nav-links a:hover {
+        color: var(--green);
+        transform: translateY(-1px);
+    }
+
+    .nav-links a:hover::after,
+    .nav-links .active::after {
+        width: 100%;
+    }
+
+    .nav-links .active {
+        color: var(--green);
+    }
+
+    .nav-actions {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .login,
+    .signup {
+        padding: 11px 18px;
+        border-radius: 9px;
+        font-family: "Space Grotesk", Inter, sans-serif;
+        font-size: 12px;
+        font-weight: 700;
+        transition: 0.25s;
+    }
+
+    .login {
+        border: 1px solid var(--border);
+    }
+
+    .login:hover {
+        border-color: var(--green);
+        color: var(--green);
+        background: var(--light);
+        transform: translateY(-2px);
+        box-shadow: 0 8px 18px #08ad5018;
+    }
+
+    .signup {
+        color: white;
+        background: linear-gradient(135deg, #0bbb5a, #078e42);
+        box-shadow: 0 8px 20px #08ad5025;
+    }
+
+    .signup:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 12px 24px #08ad5038;
+    }
+
+
+    /* HERO */
+
+    .scan-hero {
+        text-align: center;
+        padding: 80px 20px 55px;
+    }
+
+    .tag {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 8px 14px;
+        border-radius: 30px;
+        background: var(--light);
+        color: var(--green);
+        font-size: 12px;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+    }
+
+    .tag .material-symbols-rounded {
+        font-size: 18px;
+    }
+
+    .scan-hero h1 {
+        margin-top: 25px;
+        font-family: "Space Grotesk", sans-serif;
+        font-size: clamp(48px, 7vw, 76px);
+        line-height: 1.03;
+        letter-spacing: -3px;
+    }
+
+    .scan-hero h1 span {
+        color: var(--green);
+    }
+
+    .scan-hero p {
+        max-width: 650px;
+        margin: 24px auto 0;
+        color: var(--muted);
+        font-size: 16px;
+        line-height: 1.7;
+    }
+
+
+    /* SCAN CARD */
+
+    .scan-section {
+        padding: 20px 20px 80px;
+    }
+
+    .scan-card {
+        max-width: 760px;
+        margin: auto;
+        padding: 40px;
+        border: 1px solid var(--border);
+        border-radius: 20px;
+        background: white;
+        box-shadow: 0 20px 50px rgba(16, 24, 40, 0.08);
+    }
+
+    .card-header {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        margin-bottom: 35px;
+    }
+
+    .header-icon {
+        width: 52px;
+        height: 52px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 14px;
+        background: var(--light);
+        color: var(--green);
+    }
+
+    .header-icon .material-symbols-rounded {
+        font-size: 27px;
+    }
+
+    .card-header h2 {
+        font-family: "Space Grotesk", sans-serif;
+        font-size: 25px;
+    }
+
+    .card-header p {
+        margin-top: 5px;
+        color: var(--muted);
+        font-size: 14px;
+    }
+
+
+    /* INPUT */
+
+    .input-group label {
+        display: block;
+        margin-bottom: 9px;
+        font-size: 14px;
+        font-weight: 700;
+    }
+
+    .url-input {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        height: 56px;
+        padding: 0 16px;
+        border: 1px solid var(--border);
+        border-radius: 11px;
+        transition: 0.25s;
+    }
+
+    .url-input:focus-within {
+        border-color: var(--green);
+        box-shadow: 0 0 0 4px #08ad5012;
+    }
+
+    .url-input .material-symbols-rounded {
+        color: var(--muted);
+    }
+
+    .url-input input {
+        width: 100%;
+        border: none;
+        outline: none;
+        font-family: Inter, sans-serif;
+        font-size: 15px;
+    }
+
+    .url-input input::placeholder {
+        color: #98a2b3;
+    }
+
+
+    /* DIVIDER */
+
+    .divider {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        margin: 28px 0;
+    }
+
+    .divider span {
+        flex: 1;
+        height: 1px;
+        background: var(--border);
+    }
+
+    .divider p {
+        color: var(--muted);
+        font-size: 12px;
+        font-weight: 700;
+    }
+
+
+    /* UPLOAD */
+
+    .upload-box {
+        padding: 35px 20px;
+        text-align: center;
+        border: 1.5px dashed #b8dfc7;
+        border-radius: 14px;
+        background: #fbfffc;
+    }
+
+    .upload-icon {
+        font-size: 42px;
+        color: var(--green);
+    }
+
+    .upload-box h3 {
+        margin-top: 12px;
+        font-family: "Space Grotesk", sans-serif;
+        font-size: 20px;
+    }
+
+    .upload-box p {
+        margin: 7px 0 18px;
+        color: var(--muted);
+        font-size: 13px;
+    }
+
+    .upload-button {
+        display: inline-block;
+        padding: 11px 18px;
+        border-radius: 8px;
+        background: var(--light);
+        color: var(--green);
+        font-size: 13px;
+        font-weight: 700;
+        cursor: pointer;
+        transition: 0.25s;
+    }
+
+    .upload-button:hover {
+        background: #ddf8e7;
+        transform: translateY(-2px);
+    }
+
+
+    /* SCAN BUTTON */
+
+    .scan-button {
+        width: 100%;
+        height: 56px;
+        margin-top: 22px;
+        border: none;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        background: linear-gradient(135deg, #0bbb5a, #078e42);
+        color: white;
+        font-family: "Space Grotesk", sans-serif;
+        font-size: 16px;
+        font-weight: 700;
+        cursor: pointer;
+        box-shadow: 0 10px 25px #08ad5025;
+        transition: 0.25s;
+    }
+
+    .scan-button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 14px 30px #08ad5038;
+    }
+
+
+    /* LOADING */
+
+    .loading-area {
+        margin-top: 25px;
+        padding: 20px;
+        border-radius: 12px;
+        background: #f4fff7;
+    }
+
+    .loading-text {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 10px;
+        color: var(--muted);
+        font-size: 13px;
+        font-weight: 600;
+    }
+
+    .loading-bar {
+        width: 100%;
+        height: 8px;
+        overflow: hidden;
+        border-radius: 10px;
+        background: #dff3e6;
+    }
+
+    .loading-progress {
+        width: 55%;
+        height: 100%;
+        border-radius: 10px;
+        background: var(--green);
+    }
+
+    .secure-message {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 7px;
+        margin-top: 20px;
+        color: var(--muted);
+        font-size: 12px;
+    }
+
+
+    /* RESULT */
+
+    .result-section {
+        padding: 0 20px 80px;
+    }
+
+    .result-card {
+        max-width: 760px;
+        margin: auto;
+        padding: 35px;
+        border: 1px solid var(--border);
+        border-radius: 20px;
+        background: white;
+        box-shadow: 0 15px 40px rgba(16, 24, 40, 0.06);
+    }
+
+    .result-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    .result-label {
+        color: var(--green);
+        font-size: 11px;
+        font-weight: 800;
+        letter-spacing: 0.1em;
+    }
+
+    .result-header h2 {
+        margin-top: 7px;
+        font-family: "Space Grotesk", sans-serif;
+        font-size: 26px;
+    }
+
+    .safe-icon {
+        width: 52px;
+        height: 52px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 14px;
+        background: var(--light);
+        color: var(--green);
+    }
+
+    .safe-icon .material-symbols-rounded {
+        font-size: 30px;
+    }
+
+    .risk-area {
+        display: flex;
+        align-items: center;
+        gap: 25px;
+        margin-top: 30px;
+        padding: 25px;
+        border-radius: 14px;
+        background: #f8fffa;
+    }
+
+    .risk-score {
+        display: flex;
+        align-items: baseline;
+    }
+
+    .risk-score strong {
+        font-family: "Space Grotesk", sans-serif;
+        font-size: 58px;
+        color: var(--green);
+    }
+
+    .risk-score span {
+        color: var(--muted);
+    }
+
+    .risk-status {
+        font-size: 13px;
+        font-weight: 800;
+        color: var(--green);
+    }
+
+    .risk-area p {
+        margin-top: 5px;
+        color: var(--muted);
+        font-size: 13px;
+    }
+
+    .findings {
+        margin-top: 30px;
+    }
+
+    .findings h3 {
+        margin-bottom: 15px;
+        font-family: "Space Grotesk", sans-serif;
+        font-size: 20px;
+    }
+
+    .finding {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 13px 0;
+        border-bottom: 1px solid #f0f2f1;
+        font-size: 14px;
+    }
+
+    .finding.safe .material-symbols-rounded {
+        color: var(--green);
+    }
+
+    .finding.warning .material-symbols-rounded {
+        color: #f79009;
+    }
+
+
+    /* TIPS */
+
+    .tips {
+        padding: 30px 6% 90px;
+        text-align: center;
+    }
+
+    .section-tag {
+        color: var(--green);
+        font-size: 11px;
+        font-weight: 800;
+        letter-spacing: 0.12em;
+    }
+
+    .tips h2 {
+        margin-top: 10px;
+        font-family: "Space Grotesk", sans-serif;
+        font-size: 38px;
+    }
+
+    .tips-grid {
+        max-width: 1100px;
+        margin: 35px auto 0;
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 20px;
+    }
+
+    .tip-card {
+        padding: 30px;
+        text-align: left;
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        transition: 0.25s;
+    }
+
+    .tip-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 15px 35px rgba(16, 24, 40, 0.08);
+    }
+
+    .tip-icon {
+        font-size: 30px;
+        color: var(--green);
+    }
+
+    .tip-card h3 {
+        margin-top: 18px;
+        font-family: "Space Grotesk", sans-serif;
+        font-size: 19px;
+    }
+
+    .tip-card p {
+        margin-top: 10px;
+        color: var(--muted);
+        font-size: 14px;
+        line-height: 1.6;
+    }
+
+
+    /* FOOTER */
+
+    footer {
+        padding: 25px 6%;
+        display: flex;
+        justify-content: space-between;
+        border-top: 1px solid var(--border);
+        color: var(--muted);
+        font-size: 12px;
+    }
+
+
+    /* RESPONSIVE */
+
+    @media (max-width: 900px) {
+
+        .nav-links {
+            gap: 18px;
+        }
+
+        .tips-grid {
+            grid-template-columns: 1fr;
+        }
+
+    }
+
+    @media (max-width: 600px) {
+
+        .navbar {
+            padding: 0 20px;
+        }
+
+        .nav-links {
+            display: none;
+        }
+
+        .logo {
+            font-size: 21px;
+        }
+
+        .login,
+        .signup {
+            padding: 9px 12px;
+        }
+
+        .scan-hero {
+            padding-top: 55px;
+        }
+
+        .scan-hero h1 {
+            font-size: 46px;
+            letter-spacing: -2px;
+        }
+
+        .scan-card,
+        .result-card {
+            padding: 25px;
+        }
+
+        .risk-area {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        footer {
+            flex-direction: column;
+            gap: 8px;
+        }
+
+    }
+</style>
+
+<body>
+
+    <nav class="navbar">
+
+        <a href="index.html" class="logo">
+            Job<span>Guard+</span>
+        </a>
+
+        <div class="nav-links">
+            <a href="index.html">Home</a>
+            <a href="scan.html" class="active">Scan</a>
+            <a href="/history.html">History</a>
+            <a href="/aboutus.html"> About Us</a>
+        </div>
+
+        <div class="nav-actions">
+            <a href="#" class="login">Login</a>
+            <a href="#" class="signup">Sign Up</a>
+        </div>
+
+    </nav>
+
+
+    <section class="scan-hero">
+
+        <div class="tag">
+            <span class="material-symbols-rounded">verified_user</span>
+            AI-POWERED JOB SAFETY
+        </div>
+
+        <h1>
+            Check a Job<br>
+            <span>Before You Apply.</span>
+        </h1>
+
+        <p>
+            Paste a job posting URL or upload a screenshot.
+            JobGuard+ helps you identify suspicious job postings.
+        </p>
+
+    </section>
+
+
+    <section class="scan-section">
+
+        <div class="scan-card">
+
+            <div class="card-header">
+
+                <div class="header-icon">
+                    <span class="material-symbols-rounded">search</span>
+                </div>
+
+                <div>
+                    <h2>Scan Job Posting</h2>
+                    <p>Enter the job posting URL below to begin.</p>
+                </div>
+
+            </div>
+
+
+            <form>
+
+                <div class="input-group">
+
+                    <label for="jobUrl">Job Posting URL</label>
+
+                    <div class="url-input">
+
+                        <span class="material-symbols-rounded">link</span>
+
+                        <input type="url" id="jobUrl" placeholder="https://example.com/job/software-developer">
+
+                    </div>
+
+                </div>
+
+
+                <div class="divider">
+                    <span></span>
+                    <p>OR</p>
+                    <span></span>
+                </div>
+
+
+                <div class="upload-box">
+
+                    <span class="material-symbols-rounded upload-icon">
+                        cloud_upload
+                    </span>
+
+                    <h3>Upload Job Screenshot</h3>
+
+                    <p>PNG, JPG or JPEG</p>
+
+                    <label for="fileInput" class="upload-button">
+                        Choose File
+                    </label>
+
+                    <input type="file" id="fileInput" accept=".png,.jpg,.jpeg" hidden>
+
+                </div>
+
+
+                <div id="scanAlert"
+                    style="display: none; margin-top: 15px; padding: 12px 14px; border-radius: 9px; font-size: 13px; font-weight: 500;">
+                </div>
+
+                <button type="submit" id="scanBtn" class="scan-button">
+
+                        <span class="material-symbols-rounded">
+                            radar
+                        </span>
+
+                        Scan Job
+
+                        <span class="material-symbols-rounded">
+                            arrow_forward
+                        </span>
+
+                </button>
+
+            </form>
+
+
+            <div class="loading-area" id="loadingArea" style="display: none;">
+
+                <div class="loading-text">
+                    <span id="loadingStatusText">Analyzing job posting and launching sandbox...</span>
+                    <span id="loadingPercentText">Scanning</span>
+                </div>
+
+                <div class="loading-bar">
+                    <div class="loading-progress" id="loadingProgressBar"
+                        style="width: 25%; transition: width 0.4s ease;"></div>
+                </div>
+
+            </div>
+
+
+            <div class="secure-message">
+
+                <span class="material-symbols-rounded">
+                    lock
+                </span>
+
+                Your information is securely processed.
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <section class="result-section" id="resultSection" style="display: none;">
+
+        <div class="result-card">
+
+            <div class="result-header">
+
+                <div>
+
+                    <span class="result-label" id="resultHeaderLabel">
+                        SCAN RESULT
+                    </span>
+
+                    <h2 id="resultJobTitle">Job Safety Report</h2>
+                    <p id="resultJobUrl"
+                        style="color: #667085; font-size: 13px; margin-top: 4px; word-break: break-all;"></p>
+
+                </div>
+
+                <div class="safe-icon" id="resultShieldIcon">
+
+                    <span class="material-symbols-rounded" id="resultShieldSymbol">
+                        shield
+                    </span>
+
+                </div>
+
+            </div>
+
+
+            <div class="risk-area" id="resultRiskArea">
+
+                <div class="risk-score">
+                    <strong id="resultScore">0</strong>
+                    <span>/ 100</span>
+                </div>
+
+                <div>
+
+                    <div class="risk-status" id="resultLevel">
+                        EVALUATING
+                    </div>
+
+                    <p id="resultSummary">
+                        Analysis summary will appear here.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="findings">
+
+                <h3>Findings & Detected Signals</h3>
+
+                <div id="findingsContainer">
+                    <p style="color: #667085; font-size: 13px;">No suspicious activity found.</p>
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <section class="tips">
+
+        <span class="section-tag">
+            SAFETY FIRST
+        </span>
+
+        <h2>Before You Apply</h2>
+
+
+        <div class="tips-grid">
+
+            <div class="tip-card">
+
+                <span class="material-symbols-rounded tip-icon">
+                    payments
+                </span>
+
+                <h3>Never Pay to Get a Job</h3>
+
+                <p>
+                    Legitimate employers generally don't ask candidates
+                    to pay money to receive a job.
+                </p>
+
+            </div>
+
+
+            <div class="tip-card">
+
+                <span class="material-symbols-rounded tip-icon">
+                    person_search
+                </span>
+
+                <h3>Verify the Recruiter</h3>
+
+                <p>
+                    Check whether the recruiter and company can be
+                    independently verified.
+                </p>
+
+            </div>
+
+
+            <div class="tip-card">
+
+                <span class="material-symbols-rounded tip-icon">
+                    lock
+                </span>
+
+                <h3>Protect Your Information</h3>
+
+                <p>
+                    Avoid sharing sensitive financial or personal
+                    information with unverified contacts.
+                </p>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <footer>
+
+        <span>JobGuard+ © 2026</span>
+
+        <span>Safer Jobs. Smarter Decisions.</span>
+
+    </footer>
+
+    <script type="module">
+        import { api } from "./js/api.js";
+
+        if (!api.isAuthenticated()) {
+            window.location.href = "login.html";
+        }
+
+        const form = document.querySelector("form");
+        const jobUrlInput = document.getElementById("jobUrl");
+        const scanBtn = document.getElementById("scanBtn");
+        const scanAlert = document.getElementById("scanAlert");
+        const loadingArea = document.getElementById("loadingArea");
+        const loadingProgressBar = document.getElementById("loadingProgressBar");
+        const loadingStatusText = document.getElementById("loadingStatusText");
+        const loadingPercentText = document.getElementById("loadingPercentText");
+
+        const resultSection = document.getElementById("resultSection");
+        const resultJobUrl = document.getElementById("resultJobUrl");
+        const resultScore = document.getElementById("resultScore");
+        const resultLevel = document.getElementById("resultLevel");
+        const resultSummary = document.getElementById("resultSummary");
+        const findingsContainer = document.getElementById("findingsContainer");
+        const resultShieldIcon = document.getElementById("resultShieldIcon");
+        const resultShieldSymbol = document.getElementById("resultShieldSymbol");
+
+        function showAlert(msg, isError = true) {
+            scanAlert.style.display = "block";
+            scanAlert.style.backgroundColor = isError ? "#fff1f1" : "#eafff1";
+            scanAlert.style.color = isError ? "#c9363b" : "#08783b";
+            scanAlert.style.border = `1px solid ${isError ? "#f8c8c8" : "#c9efd6"}`;
+            scanAlert.textContent = msg;
+        }
+
+        function escapeHtml(value) {
+            return String(value).replace(/[&<>"']/g, (character) => ({
+                "&": "&amp;",
+                "<": "&lt;",
+                ">": "&gt;",
+                '"': "&quot;",
+                "'": "&#39;",
+            })[character]);
+        }
+
+        function renderResult(scan, report, findings) {
+            resultSection.style.display = "block";
+            resultJobUrl.textContent = scan.jobUrl || "";
+            const score = scan.riskScore !== null && scan.riskScore !== undefined ? scan.riskScore : (report?.riskScore ?? 0);
+            resultScore.textContent = score;
+
+            const level = (scan.riskLevel || report?.riskLevel || "LOW").toUpperCase();
+            resultLevel.textContent = `${level} RISK`;
+
+            if (level === "HIGH" || level === "CRITICAL") {
+                resultLevel.style.color = "#c9363b";
+                resultScore.style.color = "#c9363b";
+                resultShieldIcon.style.background = "#fff1f1";
+                resultShieldIcon.style.color = "#c9363b";
+                resultShieldSymbol.textContent = "gpp_bad";
+            } else if (level === "MEDIUM") {
+                resultLevel.style.color = "#f79009";
+                resultScore.style.color = "#f79009";
+                resultShieldIcon.style.background = "#fff8e7";
+                resultShieldIcon.style.color = "#f79009";
+                resultShieldSymbol.textContent = "gpp_maybe";
+            } else {
+                resultLevel.style.color = "#08ad50";
+                resultScore.style.color = "#08ad50";
+                resultShieldIcon.style.background = "#eafff1";
+                resultShieldIcon.style.color = "#08ad50";
+                resultShieldSymbol.textContent = "shield";
+            }
+
+            resultSummary.textContent =
+                report?.summary ||
+                (score > 50
+                    ? "This job posting contains suspicious flags or high risk indicators. Proceed with extreme caution."
+                    : "This job posting appears relatively safe based on our automated analysis.");
+
+            const list = findings && findings.length > 0 ? findings : (report?.findings || []);
+            if (list.length > 0) {
+                findingsContainer.innerHTML = list
+                    .map((f) => {
+                        const isWarning = (f.severity || "").toUpperCase() === "HIGH" || (f.severity || "").toUpperCase() === "CRITICAL";
+                        return `
+                        <div class="finding ${isWarning ? 'warning' : 'safe'}">
+                            <span class="material-symbols-rounded">${isWarning ? 'warning' : 'check_circle'}</span>
+                            <div>
+                                <strong>${escapeHtml(f.type ? f.type.replace(/_/g, ' ') : 'Finding')}:</strong>
+                                    <span>${escapeHtml(f.evidence || f.description || 'Signal detected')}</span>
+                            </div>
+                        </div>
+                    `;
+                    })
+                    .join("");
+            } else {
+                findingsContainer.innerHTML = `
+                <div class="finding safe">
+                    <span class="material-symbols-rounded">check_circle</span>
+                    No high-risk scam signals detected in this posting.
+                </div>
+            `;
+            }
+
+            resultSection.scrollIntoView({ behavior: "smooth" });
+        }
+
+        async function pollScan(scanId) {
+            let attempts = 0;
+            const maxAttempts = 60; // 2 minutes max
+
+            const interval = setInterval(async () => {
+                attempts++;
+                const progress = Math.min(90, 25 + attempts * 5);
+                loadingProgressBar.style.width = `${progress}%`;
+
+                try {
+                    const res = await api.getScan(scanId);
+                    const scan = res.data;
+
+                    if (scan.status === "SCANNING") {
+                        loadingStatusText.textContent = "Browser running in sandbox, analyzing DOM and network...";
+                    } else if (scan.status === "ANALYZING") {
+                        loadingStatusText.textContent = "Running rule evaluation and calculating risk scores...";
+                    }
+
+                    if (["COMPLETED", "FAILED", "STOPPED"].includes(scan.status)) {
+                        clearInterval(interval);
+                        loadingProgressBar.style.width = "100%";
+                        loadingStatusText.textContent = "Scan complete!";
+                        loadingPercentText.textContent = "Done";
+
+                        setTimeout(async () => {
+                            loadingArea.style.display = "none";
+                            scanBtn.disabled = false;
+                            scanBtn.innerHTML = `
+                            <span class="material-symbols-rounded">radar</span>
+                            Scan Job
+                            <span class="material-symbols-rounded">arrow_forward</span>
+                        `;
+
+                            let report = null;
+                            let findings = [];
+                            try {
+                                const repRes = await api.getReport(scanId);
+                                report = repRes.data;
+                            } catch (e) {
+                                console.warn("Report not ready:", e);
+                            }
+                            try {
+                                const findRes = await api.getScanFindings(scanId);
+                                findings = findRes.data || [];
+                            } catch (e) {
+                                console.warn("Findings error:", e);
+                            }
+
+                            renderResult(scan, report, findings);
+                        }, 600);
+                    }
+                } catch (err) {
+                    console.error("Polling error:", err);
+                    if (attempts >= maxAttempts) {
+                        clearInterval(interval);
+                        loadingArea.style.display = "none";
+                        scanBtn.disabled = false;
+                        scanBtn.innerHTML = `Scan Job`;
+                        showAlert("Scan timed out or encountered an error. Please check History.");
+                    }
+                }
+            }, 2000);
+        }
+
+        form.addEventListener("submit", async (e) => {
+            e.preventDefault();
+            scanAlert.style.display = "none";
+            resultSection.style.display = "none";
+
+            const url = jobUrlInput.value.trim();
+            if (!url) {
+                showAlert("Please enter a valid job URL to scan.");
+                return;
+            }
+
+            try {
+                const parsedUrl = new URL(url);
+                if (!["http:", "https:"].includes(parsedUrl.protocol)) {
+                    showAlert("Please enter a valid HTTP or HTTPS job posting URL.");
+                    return;
+                }
+            } catch {
+                showAlert("Invalid URL format. Please enter a full URL (e.g. https://example.com/job).");
+                return;
+            }
+
+            scanBtn.disabled = true;
+            scanBtn.innerHTML = `Starting scan...`;
+            loadingArea.style.display = "block";
+            loadingProgressBar.style.width = "20%";
+            loadingStatusText.textContent = "Queueing scanner container...";
+            loadingPercentText.textContent = "Scanning";
+
+            try {
+                const data = await api.createScan(url);
+                const scanId = data.data.scanId;
+                pollScan(scanId);
+            } catch (error) {
+                loadingArea.style.display = "none";
+                scanBtn.disabled = false;
+                scanBtn.innerHTML = `
+                <span class="material-symbols-rounded">radar</span>
+                Scan Job
+                <span class="material-symbols-rounded">arrow_forward</span>
+            `;
+                showAlert(error.message || "Failed to start scan. Ensure backend is running.");
+            }
+        });
+
+        const urlParams = new URLSearchParams(window.location.search);
+        const viewScanId = urlParams.get("scanId");
+        if (viewScanId) {
+            (async () => {
+                try {
+                    const res = await api.getScan(viewScanId);
+                    const scan = res.data;
+                    const repRes = await api.getReport(viewScanId).catch(() => ({ data: null }));
+                    const findRes = await api.getScanFindings(viewScanId).catch(() => ({ data: [] }));
+                    renderResult(scan, repRes.data, findRes.data);
+                } catch (e) {
+                    console.warn("Could not load scan from query param:", e);
+                }
+            })();
+        }
+    </script>
+
+</body>
+
+</html>

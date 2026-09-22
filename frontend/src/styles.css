@@ -1,0 +1,14 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap');
+@import "tailwindcss";
+
+:root { font-family: 'DM Sans', sans-serif; color: #101828; background: #fff; font-synthesis: none; }
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body { margin: 0; min-width: 320px; overflow-x: hidden; }
+button, input { font: inherit; }
+button, a { -webkit-tap-highlight-color: transparent; }
+.font-display { font-family: 'Space Grotesk', sans-serif; }
+.hero-grid { background: radial-gradient(circle at 84% 22%, #c8f8d9 0, transparent 25%), radial-gradient(circle at 15% 75%, #e7fff0 0, transparent 27%), linear-gradient(180deg, #fff, #f6fff9); }
+.section-band { padding: 5rem 0; background: radial-gradient(circle at 50% 0, #eafff1, transparent 42%); }
+.auth-bg { background: radial-gradient(circle at 15% 20%, #eafff1 0, transparent 28%), radial-gradient(circle at 85% 75%, #edfff4 0, transparent 28%), #fff; }
+@media (prefers-reduced-motion: no-preference) { .hero-grid > * { animation: rise .55s ease both; } @keyframes rise { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: translateY(0); } } }

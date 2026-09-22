@@ -1,0 +1,783 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>JobGuard+ | Sign Up</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
+
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,500,0,0"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="signup.css">
+</head>
+<style>
+    :root {
+        --green: #08ad50;
+        --dark-green: #078e42;
+        --light: #f1fff6;
+        --text: #101828;
+        --muted: #667085;
+        --border: #e4e7ec;
+    }
+
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    body {
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+
+        font-family: "Inter", sans-serif;
+        color: var(--text);
+
+        background:
+            radial-gradient(circle at 20% 20%, #eafff1 0, transparent 28%),
+            radial-gradient(circle at 80% 70%, #edfff4 0, transparent 28%),
+            #ffffff;
+    }
+
+    a {
+        text-decoration: none;
+        color: inherit;
+    }
+
+
+    /* NAVBAR */
+
+    .navbar {
+        height: 76px;
+        padding: 0 6%;
+
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+
+        background: rgba(255, 255, 255, 0.9);
+        backdrop-filter: blur(15px);
+
+        border-bottom: 1px solid #edf0ee;
+
+        position: sticky;
+        top: 0;
+        z-index: 20;
+    }
+
+    .logo {
+        font-family: "Space Grotesk", Inter, sans-serif;
+
+        font-size: 24px;
+        font-weight: 700;
+
+        letter-spacing: -1.2px;
+    }
+
+    .logo span {
+        color: var(--green);
+    }
+
+    .nav-links {
+        display: flex;
+        gap: 34px;
+
+        font-family: "Space Grotesk", Inter, sans-serif;
+
+        font-size: 13px;
+        font-weight: 600;
+
+        letter-spacing: 0.04em;
+
+        color: #344054;
+    }
+
+    .nav-links a {
+        position: relative;
+
+        padding: 8px 2px;
+
+        transition: 0.25s ease;
+    }
+
+    .nav-links a::after {
+        content: "";
+
+        position: absolute;
+
+        left: 0;
+        bottom: 0;
+
+        width: 0;
+        height: 2px;
+
+        border-radius: 2px;
+
+        background: var(--green);
+
+        transition: 0.25s ease;
+    }
+
+    .nav-links a:hover {
+        color: var(--green);
+
+        transform: translateY(-1px);
+    }
+
+    .nav-links a:hover::after {
+        width: 100%;
+    }
+
+    .nav-actions {
+        display: flex;
+        align-items: center;
+
+        gap: 10px;
+    }
+
+    .login,
+    .signup {
+        padding: 11px 18px;
+
+        border-radius: 9px;
+
+        font-family: "Space Grotesk", Inter, sans-serif;
+
+        font-size: 12px;
+        font-weight: 700;
+
+        transition: 0.25s;
+    }
+
+    .login {
+        border: 1px solid var(--border);
+    }
+
+    .login:hover {
+        border-color: var(--green);
+
+        color: var(--green);
+
+        background: var(--light);
+
+        transform: translateY(-2px);
+
+        box-shadow: 0 8px 18px #08ad5018;
+    }
+
+    .signup {
+        color: white;
+
+        background:
+            linear-gradient(135deg, #0bbb5a, #078e42);
+
+        box-shadow: 0 8px 20px #08ad5025;
+    }
+
+    .signup:hover,
+    .signup.active {
+        transform: translateY(-2px);
+
+        box-shadow: 0 12px 24px #08ad5038;
+    }
+
+
+    /* SIGN UP PAGE */
+
+    .signup-page {
+        flex: 1;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        padding: 55px 20px;
+    }
+
+    .signup-card {
+        width: 100%;
+        max-width: 480px;
+
+        padding: 38px 42px;
+
+        border: 1px solid var(--border);
+
+        border-radius: 22px;
+
+        background: rgba(255, 255, 255, 0.96);
+
+        box-shadow:
+            0 25px 70px rgba(16, 24, 40, 0.09);
+    }
+
+
+    /* ICON */
+
+    .signup-icon {
+        width: 58px;
+        height: 58px;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        margin: 0 auto 20px;
+
+        border-radius: 16px;
+
+        background: var(--light);
+
+        color: var(--green);
+    }
+
+    .signup-icon .material-symbols-rounded {
+        font-size: 31px;
+    }
+
+
+    /* HEADING */
+
+    .signup-heading {
+        text-align: center;
+    }
+
+    .signup-heading>span {
+        color: var(--green);
+
+        font-size: 11px;
+        font-weight: 800;
+
+        letter-spacing: 0.12em;
+    }
+
+    .signup-heading h1 {
+        margin-top: 8px;
+
+        font-family: "Space Grotesk", sans-serif;
+
+        font-size: 29px;
+
+        letter-spacing: -1px;
+    }
+
+    .signup-heading p {
+        max-width: 370px;
+
+        margin: 9px auto 0;
+
+        color: var(--muted);
+
+        font-size: 13px;
+
+        line-height: 1.6;
+    }
+
+
+    /* FORM */
+
+    form {
+        margin-top: 27px;
+    }
+
+    .input-group {
+        margin-bottom: 16px;
+    }
+
+    .input-group label {
+        display: block;
+
+        margin-bottom: 7px;
+
+        font-size: 13px;
+        font-weight: 700;
+    }
+
+
+    /* INPUT */
+
+    .input-box {
+        height: 50px;
+
+        display: flex;
+        align-items: center;
+
+        gap: 11px;
+
+        padding: 0 15px;
+
+        border: 1px solid var(--border);
+
+        border-radius: 10px;
+
+        transition: 0.25s;
+    }
+
+    .input-box:focus-within {
+        border-color: var(--green);
+
+        box-shadow:
+            0 0 0 4px #08ad5012;
+    }
+
+    .input-box .material-symbols-rounded {
+        color: var(--muted);
+
+        font-size: 21px;
+    }
+
+    .input-box input {
+        width: 100%;
+        height: 100%;
+
+        border: none;
+        outline: none;
+
+        background: transparent;
+
+        font-family: Inter, sans-serif;
+
+        font-size: 14px;
+    }
+
+    .input-box input::placeholder {
+        color: #98a2b3;
+    }
+
+
+    /* TERMS */
+
+    .terms {
+        display: flex;
+        align-items: flex-start;
+
+        gap: 9px;
+
+        margin: 5px 0 20px;
+
+        color: var(--muted);
+
+        font-size: 11px;
+
+        line-height: 1.5;
+
+        cursor: pointer;
+    }
+
+    .terms input {
+        width: 15px;
+        height: 15px;
+
+        margin-top: 1px;
+
+        flex-shrink: 0;
+
+        accent-color: var(--green);
+    }
+
+    .terms a {
+        color: var(--green);
+
+        font-weight: 700;
+    }
+
+
+    /* SIGN UP BUTTON */
+
+    .signup-button {
+        width: 100%;
+        height: 53px;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        gap: 9px;
+
+        border: none;
+
+        border-radius: 10px;
+
+        background:
+            linear-gradient(135deg, #0bbb5a, #078e42);
+
+        color: white;
+
+        font-family: "Space Grotesk", sans-serif;
+
+        font-size: 15px;
+        font-weight: 700;
+
+        cursor: pointer;
+
+        box-shadow: 0 10px 25px #08ad5025;
+
+        transition: 0.25s;
+    }
+
+    .signup-button:hover {
+        transform: translateY(-2px);
+
+        box-shadow:
+            0 14px 30px #08ad5038;
+    }
+
+
+    /* LOGIN LINK */
+
+    .login-text {
+        margin-top: 22px;
+
+        text-align: center;
+
+        color: var(--muted);
+
+        font-size: 12px;
+    }
+
+    .login-text a {
+        color: var(--green);
+
+        font-weight: 700;
+    }
+
+    .login-text a:hover {
+        text-decoration: underline;
+    }
+
+
+    /* FOOTER */
+
+    footer {
+        padding: 22px 6%;
+
+        display: flex;
+        justify-content: space-between;
+
+        border-top: 1px solid var(--border);
+
+        background: rgba(255, 255, 255, 0.8);
+
+        color: var(--muted);
+
+        font-size: 12px;
+    }
+
+
+    /* RESPONSIVE */
+
+    @media (max-width: 900px) {
+
+        .nav-links {
+            gap: 18px;
+        }
+
+    }
+
+    @media (max-width: 600px) {
+
+        .navbar {
+            padding: 0 20px;
+        }
+
+        .nav-links {
+            display: none;
+        }
+
+        .logo {
+            font-size: 21px;
+        }
+
+        .login,
+        .signup {
+            padding: 9px 12px;
+        }
+
+        .signup-card {
+            padding: 30px 24px;
+        }
+
+        .signup-heading h1 {
+            font-size: 26px;
+        }
+
+        .signup-page {
+            padding: 40px 15px;
+        }
+
+        footer {
+            flex-direction: column;
+            gap: 8px;
+        }
+
+    }
+</style>
+
+<body>
+
+    <nav class="navbar">
+
+        <a href="index.html" class="logo">
+            Job<span>Guard+</span>
+        </a>
+
+        <div class="nav-links">
+
+            <a href="index.html">Home</a>
+
+            <a href="scan.html">Scan</a>
+
+            <a href="index.html#works">Safety Tips</a>
+
+            <a href="index.html#works">About</a>
+
+        </div>
+
+        <div class="nav-actions">
+
+            <a href="login.html" class="login">
+                Login
+            </a>
+
+            <a href="signup.html" class="signup active">
+                Sign Up
+            </a>
+
+        </div>
+
+    </nav>
+
+
+    <main class="signup-page">
+
+        <div class="signup-card">
+
+            <div class="signup-icon">
+
+                <span class="material-symbols-rounded">
+                    person_add
+                </span>
+
+            </div>
+
+
+            <div class="signup-heading">
+
+                <span>GET STARTED</span>
+
+                <h1>Create Your Account</h1>
+
+                <p>
+                    Join JobGuard+ and make safer decisions before applying for jobs.
+                </p>
+
+            </div>
+
+
+            <form>
+
+                <div class="input-group">
+
+                    <label for="name">
+                        Full Name
+                    </label>
+
+                    <div class="input-box">
+
+                        <span class="material-symbols-rounded">
+                            person
+                        </span>
+
+                        <input type="text" id="name" placeholder="Enter your full name" required>
+
+                    </div>
+
+                </div>
+
+
+                <div class="input-group">
+
+                    <label for="email">
+                        Email Address
+                    </label>
+
+                    <div class="input-box">
+
+                        <span class="material-symbols-rounded">
+                            mail
+                        </span>
+
+                        <input type="email" id="email" placeholder="Enter your email" required>
+
+                    </div>
+
+                </div>
+
+
+                <div class="input-group">
+
+                    <label for="password">
+                        Password
+                    </label>
+
+                    <div class="input-box">
+
+                        <span class="material-symbols-rounded">
+                            lock
+                        </span>
+
+                        <input type="password" id="password" placeholder="Create a password" required>
+
+                    </div>
+
+                </div>
+
+
+                <div class="input-group">
+
+                    <label for="confirmPassword">
+                        Confirm Password
+                    </label>
+
+                    <div class="input-box">
+
+                        <span class="material-symbols-rounded">
+                            lock_reset
+                        </span>
+
+                        <input type="password" id="confirmPassword" placeholder="Confirm your password" required>
+
+                    </div>
+
+                </div>
+
+
+                <label class="terms">
+
+                    <input type="checkbox" required>
+
+                    <span>
+                        I agree to the
+                        <a href="#">Terms of Service</a>
+                        and
+                        <a href="#">Privacy Policy</a>
+                    </span>
+
+                </label>
+
+
+                <div id="signupAlert"
+                    style="display: none; margin-top: 15px; padding: 12px 14px; border-radius: 9px; font-size: 13px; font-weight: 500;">
+                </div>
+
+                <button type="submit" id="signupBtn" class="signup-button">
+
+                    Create Account
+
+                    <span class="material-symbols-rounded">
+                        arrow_forward
+                    </span>
+
+                </button>
+
+            </form>
+
+
+            <p class="login-text">
+
+                Already have an account?
+
+                <a href="login.html">
+                    Login
+                </a>
+
+            </p>
+
+        </div>
+
+    </main>
+
+
+    <footer>
+
+        <span>
+            JobGuard+ © 2026
+        </span>
+
+        <span>
+            Safer Jobs. Smarter Decisions.
+        </span>
+
+    </footer>
+
+    <script type="module">
+        import { api } from "./js/api.js";
+
+        if (api.isAuthenticated()) {
+            window.location.href = "scan.html";
+        }
+
+        const form = document.querySelector("form");
+        const nameInput = document.getElementById("name");
+        const emailInput = document.getElementById("email");
+        const passwordInput = document.getElementById("password");
+        const confirmPasswordInput = document.getElementById("confirmPassword");
+        const alertBox = document.getElementById("signupAlert");
+        const signupBtn = document.getElementById("signupBtn");
+
+        function showAlert(message, isError = true) {
+            alertBox.style.display = "block";
+            alertBox.style.backgroundColor = isError ? "#fff1f1" : "#eafff1";
+            alertBox.style.color = isError ? "#c9363b" : "#08783b";
+            alertBox.style.border = `1px solid ${isError ? "#f8c8c8" : "#c9efd6"}`;
+            alertBox.textContent = message;
+        }
+
+        form.addEventListener("submit", async (e) => {
+            e.preventDefault();
+            alertBox.style.display = "none";
+
+            const name = nameInput.value.trim();
+            const email = emailInput.value.trim();
+            const password = passwordInput.value;
+            const confirmPassword = confirmPasswordInput.value;
+
+            if (password !== confirmPassword) {
+                showAlert("Passwords do not match. Please re-enter.");
+                return;
+            }
+
+            if (password.length < 8) {
+                showAlert("Password must be at least 8 characters long.");
+                return;
+            }
+
+            signupBtn.disabled = true;
+            signupBtn.innerHTML = `Creating Account...`;
+
+            try {
+                await api.register(name, email, password);
+                showAlert("Account created successfully! Redirecting...", false);
+                setTimeout(() => {
+                    window.location.href = "scan.html";
+                }, 1000);
+            } catch (error) {
+                showAlert(error.message || "Failed to create account. Please try again.");
+                signupBtn.disabled = false;
+                signupBtn.innerHTML = `Create Account <span class="material-symbols-rounded">arrow_forward</span>`;
+            }
+        });
+    </script>
+
+</body>
+
+</html>
