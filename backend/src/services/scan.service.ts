@@ -254,6 +254,36 @@ async function runScan(
       finalRisk,
     );
 
+    await Scan.updateOne(
+      {
+        scanId,
+      },
+      {
+        $set: {
+          status:
+            scanStopped
+              ? ScanStatus.STOPPED
+              : ScanStatus.COMPLETED,
+
+          riskScore:
+            finalRisk.score,
+
+          riskLevel:
+            finalRisk.level,
+
+          completedAt:
+            new Date(),
+
+          ...(scanStopped
+            ? {
+                error:
+                  "Scan stopped by Stop Guard before sensitive information could be entered.",
+              }
+            : {}),
+        },
+      },
+    );
+
     try {
       const aiAnalysis =
         await analyzeEvidenceWithAI({
@@ -289,35 +319,6 @@ async function runScan(
       );
     }
 
-    await Scan.updateOne(
-      {
-        scanId,
-      },
-      {
-        $set: {
-          status:
-            scanStopped
-              ? ScanStatus.STOPPED
-              : ScanStatus.COMPLETED,
-
-          riskScore:
-            finalRisk.score,
-
-          riskLevel:
-            finalRisk.level,
-
-          completedAt:
-            new Date(),
-
-          ...(scanStopped
-            ? {
-                error:
-                  "Scan stopped by Stop Guard before sensitive information could be entered.",
-              }
-            : {}),
-        },
-      },
-    );
   } catch (error) {
     logger.error(
       {

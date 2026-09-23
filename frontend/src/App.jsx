@@ -33,12 +33,12 @@ import {
   UserRound,
   X,
 } from "lucide-react";
-import { api } from "./api";
-import heroImage from "../assets/jobguard-hero.png";
-import leadPhoto from "../assets/raghav-lead.jpg";
-import devPhoto from "../assets/developer-member.jpg";
-import riteshPhoto from "../assets/ritesh-ai.png";
-import harshPhoto from "../assets/harsh-research.jpg";
+import { api } from "./services/api";
+import heroImage from "./assets/jobguard-hero.png";
+import leadPhoto from "./assets/raghav-lead.jpg";
+import devPhoto from "./assets/developer-member.jpg";
+import riteshPhoto from "./assets/ritesh-ai.png";
+import harshPhoto from "./assets/harsh-research.jpg";
 
 const green = "text-[#08ad50]";
 const button =
@@ -176,7 +176,7 @@ function Protected({ children }) {
   return api.isAuthenticated() ? children : <Navigate to="/login" replace />;
 }
 
-function Home() {
+export function Home() {
   return (
     <Layout>
       <section className="hero-grid border-b border-slate-100/80">
@@ -327,7 +327,7 @@ function Cta() {
   );
 }
 
-function AuthPage({ mode }) {
+export function AuthPage({ mode }) {
   const isLogin = mode === "login";
   const Icon = isLogin ? LogIn : ShieldCheck;
   const navigate = useNavigate();
@@ -438,7 +438,7 @@ function Field({ label, value, onChange, type = "text", placeholder }) {
   );
 }
 
-function Scan() {
+export function Scan() {
   const [params] = useSearchParams();
   const [url, setUrl] = useState("");
   const [scan, setScan] = useState(null);
@@ -674,7 +674,7 @@ function Result({ scan, report, findings, risk, score, level }) {
   );
 }
 
-function History() {
+export function History() {
   const [scans, setScans] = useState([]);
   const [query, setQuery] = useState("");
   const [error, setError] = useState("");
@@ -803,7 +803,7 @@ function HistoryRow({ scan }) {
   );
 }
 
-function About() {
+export function About() {
   return (
     <Layout>
       <section className="hero-grid px-5 py-20 text-center lg:px-10">

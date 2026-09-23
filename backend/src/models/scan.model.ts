@@ -65,6 +65,8 @@ const scanSchema = new Schema(
   },
 );
 
+scanSchema.index({ userId: 1, createdAt: -1 });
+
 export type ScanDocument =
   InferSchemaType<typeof scanSchema>;
 

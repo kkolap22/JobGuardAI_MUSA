@@ -1,4 +1,4 @@
-import { chromium } from "playwright";
+import { chromium, type Browser } from "playwright";
 
 import type {
   NetworkEvent,
@@ -19,9 +19,69 @@ import {
 
 const PAGE_TIMEOUT = 20_000;
 
-const POST_LOAD_WAIT = 1_000;
+const POST_LOAD_WAIT = 250;
 
 const MAX_NETWORK_EVENTS = 5_000;
+
+const MAX_CONCURRENT_SCANS = 3;
+
+const SKIPPED_RESOURCE_TYPES = new Set([
+  "image",
+  "font",
+  "media",
+]);
+
+let sharedBrowser: Browser | undefined;
+let browserLaunch: Promise<Browser> | undefined;
+let activeScans = 0;
+const scanWaiters: Array<() => void> = [];
+
+async function getBrowser(): Promise<Browser> {
+  if (sharedBrowser?.isConnected()) {
+    return sharedBrowser;
+  }
+
+  if (!browserLaunch) {
+    browserLaunch = chromium
+      .launch({
+        headless: true,
+        args: [
+          "--no-sandbox",
+          "--disable-setuid-sandbox",
+          "--disable-dev-shm-usage",
+          "--no-first-run",
+          "--no-default-browser-check",
+        ],
+      })
+      .then((browser) => {
+        sharedBrowser = browser;
+        return browser;
+      })
+      .finally(() => {
+        browserLaunch = undefined;
+      });
+  }
+
+  return browserLaunch;
+}
+
+async function acquireScanSlot(): Promise<void> {
+  if (activeScans < MAX_CONCURRENT_SCANS) {
+    activeScans += 1;
+    return;
+  }
+
+  await new Promise<void>((resolve) => {
+    scanWaiters.push(resolve);
+  });
+
+  activeScans += 1;
+}
+
+function releaseScanSlot(): void {
+  activeScans -= 1;
+  scanWaiters.shift()?.();
+}
 
 export async function scanUrl(
   initialUrl: string,
@@ -34,17 +94,7 @@ export async function scanUrl(
     checkedHosts,
   );
 
-  const browser =
-    await chromium.launch({
-      headless: true,
-      args: [
-        "--no-sandbox",
-        "--disable-setuid-sandbox",
-        "--disable-dev-shm-usage",
-        "--no-first-run",
-        "--no-default-browser-check",
-      ],
-    });
+  const browser = await getBrowser();
 
   const context =
     await browser.newContext({
@@ -75,6 +125,15 @@ export async function scanUrl(
           );
           return;
         }
+      }
+
+      if (
+        SKIPPED_RESOURCE_TYPES.has(
+          route.request().resourceType(),
+        )
+      ) {
+        await route.abort("blockedbyclient");
+        return;
       }
 
       await route.continue();
@@ -156,28 +215,6 @@ export async function scanUrl(
   );
 
   page.on(
-    "requestfinished",
-    (request) => {
-      addNetworkEvent({
-        type:
-          "REQUEST_FINISHED",
-
-        timestamp:
-          new Date().toISOString(),
-
-        url:
-          request.url(),
-
-        method:
-          request.method(),
-
-        resourceType:
-          request.resourceType(),
-      });
-    },
-  );
-
-  page.on(
     "requestfailed",
     (request) => {
       addNetworkEvent({
@@ -239,6 +276,8 @@ export async function scanUrl(
         currentUrl;
     },
   );
+
+  await acquireScanSlot();
 
   try {
     await page.goto(
@@ -318,9 +357,6 @@ export async function scanUrl(
     } catch {
     }
 
-    try {
-      await browser.close();
-    } catch {
-    }
+    releaseScanSlot();
   }
 }
