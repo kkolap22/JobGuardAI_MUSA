@@ -44,6 +44,47 @@ const green = "text-[#08ad50]";
 const button =
   "inline-flex items-center justify-center gap-2 rounded-xl bg-[#078e42] px-5 py-3 text-sm font-bold text-white shadow-lg shadow-[#08ad50]/20 transition hover:-translate-y-0.5 hover:bg-[#06783a] disabled:cursor-not-allowed disabled:opacity-60";
 
+function validateJobUrl(rawUrl) {
+  const value = String(rawUrl || "").trim();
+
+  if (!value) {
+    return { valid: false, message: "Job URL daalo." };
+  }
+
+  if (value.includes(" ")) {
+    return { valid: false, message: "URL mein spaces nahi hone chahiye." };
+  }
+
+  try {
+    const url = new URL(value);
+
+    if (url.protocol !== "http:" && url.protocol !== "https:") {
+      return { valid: false, message: "Sirf HTTP ya HTTPS URL allow hai." };
+    }
+
+    const hostname = url.hostname.toLowerCase();
+
+    if (
+      !hostname.includes(".") ||
+      hostname === "localhost" ||
+      hostname.endsWith(".localhost") ||
+      hostname.endsWith(".local") ||
+      hostname.endsWith(".internal") ||
+      hostname === "127.0.0.1" ||
+      hostname === "[::1]"
+    ) {
+      return {
+        valid: false,
+        message: "Ye public job URL nahi lag raha. Local ya private URL allow nahi hai.",
+      };
+    }
+
+    return { valid: true, message: "" };
+  } catch {
+    return { valid: false, message: "Valid job URL enter karein, jaise https://example.com/job" };
+  }
+}
+
 function Header() {
   const location = useLocation();
   const navigate = useNavigate();
@@ -465,14 +506,17 @@ export function Scan() {
     e.preventDefault();
     setError("");
     setScan(null);
-    if (!/^https?:\/\//i.test(url)) {
-      setError("Valid HTTP ya HTTPS URL enter karein.");
+
+    const validation = validateJobUrl(url);
+    if (!validation.valid) {
+      setError(validation.message);
       return;
     }
+
     setLoading(true);
     setProgress(15);
     try {
-      const created = await api.createScan(url);
+      const created = await api.createScan(url.trim());
       const id = created.data.scanId;
       let done = false;
       for (let attempt = 0; attempt < 60 && !done; attempt++) {
@@ -597,6 +641,17 @@ export function Scan() {
     </Layout>
   );
 }
+function formatFindingType(type) {
+  const normalized = String(type || "Finding")
+    .replaceAll("_", " ")
+    .replace(/\bCREDENTIALAL\b/gi, "CREDENTIAL")
+    .replace(/\bCREDENTAIL\b/gi, "CREDENTIAL")
+    .replace(/\s+/g, " ")
+    .trim();
+
+  return normalized || "Finding";
+}
+
 function Result({ scan, report, findings, risk, score, level }) {
   const all = findings.length ? findings : report?.findings || [];
   const failed = scan.status === "FAILED";
@@ -650,7 +705,7 @@ function Result({ scan, report, findings, risk, score, level }) {
             >
               <CircleAlert className="shrink-0 text-amber-500" size={18} />
               <span>
-                <b>{(finding.type || "Finding").replaceAll("_", " ")}: </b>
+                <b>{formatFindingType(finding.type)}: </b>
                 {finding.evidence ||
                   finding.explanation ||
                   finding.description ||

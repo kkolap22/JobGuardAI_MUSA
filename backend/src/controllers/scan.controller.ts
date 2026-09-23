@@ -40,13 +40,17 @@ export async function createScanController(
       );
 
     if (!parsed.success) {
+      const fieldErrors = parsed.error.flatten().fieldErrors;
+      const firstMessage = Object.values(fieldErrors)
+        .flat()
+        .find((message) => Boolean(message));
+
       res.status(400).json({
         success: false,
         message:
-          "Invalid scan data",
+          firstMessage || "Invalid scan data",
         errors:
-          parsed.error.flatten()
-            .fieldErrors,
+          fieldErrors,
       });
 
       return;
