@@ -26,8 +26,7 @@ export function detectCredentialRequest(
     (form) =>
       form.fields.filter((field) => {
         const value =
-          `${field.name} ${field.placeholder ?? ""}`
-            .toLowerCase();
+          `${field.name} ${field.placeholder ?? ""}`.toLowerCase();
 
         return (
           field.type === "password" ||
@@ -45,11 +44,15 @@ export function detectCredentialRequest(
   findings.push({
     type: "CREDENTIAL_REQUEST",
     severity: "HIGH",
-    score: 50,
+
+    // Credential request = 25 points
+    score: 25,
+
     evidence:
       credentialFields.length > 0
         ? `Credential field detected: ${credentialFields[0]?.name}`
         : `Credential-related language detected: ${matchedText}`,
+
     source: "credential.rule",
   });
 

@@ -1,10 +1,10 @@
-export function getRiskTone(level = "LOW") {
-  const normalized = level.toUpperCase();
-  if (["HIGH", "CRITICAL"].includes(normalized)) return "danger";
-  if (normalized === "MEDIUM") return "warn";
-  return "safe";
-}
+export function formatFindingType(type) {
+  const normalized = String(type || "Finding")
+    .replaceAll("_", " ")
+    .replace(/\bCREDENTIALAL\b/gi, "CREDENTIAL")
+    .replace(/\bCREDENTAIL\b/gi, "CREDENTIAL")
+    .replace(/\s+/g, " ")
+    .trim();
 
-export function formatDate(value) {
-  return value ? new Date(value).toLocaleString() : "Recently";
+  return normalized || "Finding";
 }

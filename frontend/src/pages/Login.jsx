@@ -1,5 +1,140 @@
-import { AuthPage } from "../App.jsx";
+import { useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
+import { LoaderCircle, LogIn } from "lucide-react";
+
+import { authApi } from "../services/auth.api";
 
 export default function Login() {
-  return <AuthPage mode="login" />;
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+
+    setError("");
+    setLoading(true);
+
+    try {
+      const response = await authApi.login(
+        email.trim(),
+        password
+      );
+
+      const tokens = response.data?.tokens;
+      const user = response.data?.user;
+
+      if (!tokens?.accessToken) {
+        throw new Error(
+          "Login succeeded but no access token was returned."
+        );
+      }
+
+      localStorage.setItem(
+        "jobguard_access_token",
+        tokens.accessToken
+      );
+
+      if (tokens.refreshToken) {
+        localStorage.setItem(
+          "jobguard_refresh_token",
+          tokens.refreshToken
+        );
+      }
+
+      if (user) {
+        localStorage.setItem(
+          "jobguard_user",
+          JSON.stringify(user)
+        );
+      }
+
+      const destination =
+        location.state?.from?.pathname || "/scan";
+
+      navigate(destination, { replace: true });
+    } catch (err) {
+      setError(
+        err.message || "Unable to login."
+      );
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <div className="w-full">
+      <form
+        onSubmit={handleSubmit}
+        className="space-y-5"
+      >
+        {error && (
+          <div className="rounded-xl border border-red-200 bg-red-50 p-3 text-sm text-red-700">
+            {error}
+          </div>
+        )}
+
+        <div>
+          <label className="text-sm font-bold">
+            Email
+          </label>
+
+          <input
+            type="email"
+            value={email}
+            onChange={(event) =>
+              setEmail(event.target.value)
+            }
+            placeholder="you@example.com"
+            required
+            autoComplete="email"
+            className="mt-2 h-12 w-full rounded-xl border border-slate-200 px-4 outline-none transition focus:border-[#08ad50] focus:ring-4 focus:ring-[#08ad50]/10"
+          />
+        </div>
+
+        <div>
+          <label className="text-sm font-bold">
+            Password
+          </label>
+
+          <input
+            type="password"
+            value={password}
+            onChange={(event) =>
+              setPassword(event.target.value)
+            }
+            placeholder="Enter your password"
+            required
+            autoComplete="current-password"
+            className="mt-2 h-12 w-full rounded-xl border border-slate-200 px-4 outline-none transition focus:border-[#08ad50] focus:ring-4 focus:ring-[#08ad50]/10"
+          />
+        </div>
+
+        <button
+          type="submit"
+          disabled={loading}
+          className="flex h-12 w-full items-center justify-center gap-2 rounded-xl bg-[#078e42] font-bold text-white transition hover:bg-[#06783a] disabled:cursor-not-allowed disabled:opacity-60"
+        >
+          {loading ? (
+            <>
+              <LoaderCircle
+                size={19}
+                className="animate-spin"
+              />
+              Logging in...
+            </>
+          ) : (
+            <>
+              <LogIn size={19} />
+              Login
+            </>
+          )}
+        </button>
+      </form>
+    </div>
+  );
 }
