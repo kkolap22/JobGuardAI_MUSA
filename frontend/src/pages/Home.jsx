@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Link } from "react-router-dom";
 import {
   ArrowRight,
@@ -7,6 +8,7 @@ import {
   Shield,
   ShieldCheck,
   Sparkles,
+  X,
 } from "lucide-react";
 
 import heroImage from "../assets/jobguard-hero.png";
@@ -23,8 +25,13 @@ const button =
   "inline-flex items-center justify-center gap-2 rounded-xl bg-[#078e42] px-5 py-3 text-sm font-bold text-white shadow-lg shadow-[#08ad50]/20 transition hover:-translate-y-0.5 hover:bg-[#06783a] disabled:cursor-not-allowed disabled:opacity-60";
 
 export default function Home() {
+  const [showDemo, setShowDemo] = useState(false);
+
   return (
     <Layout>
+      {/* =====================================================
+          HERO
+      ===================================================== */}
       <section className="hero-grid border-b border-slate-100/80">
         <div className="w-full items-center justify-between gap-8 px-6 py-16 lg:grid lg:min-h-[640px] lg:grid-cols-[0.9fr_1.2fr] lg:px-12 lg:py-10">
           <div className="max-w-2xl">
@@ -43,15 +50,18 @@ export default function Home() {
 
             <div className="mt-8 flex flex-wrap gap-3">
               <Link to="/scan" className={button}>
-                Check a Job Post <ArrowRight size={17} />
+                Check a Job Post
+                <ArrowRight size={17} />
               </Link>
 
-              <a
-                href="#system"
-                className="inline-flex items-center gap-2 rounded-xl border border-slate-200 px-5 py-3 text-sm font-bold text-slate-700 hover:border-[#08ad50] hover:text-[#08ad50]"
+              <button
+                type="button"
+                onClick={() => setShowDemo(true)}
+                className="inline-flex items-center gap-2 rounded-xl border border-slate-200 px-5 py-3 text-sm font-bold text-slate-700 transition hover:border-[#08ad50] hover:text-[#08ad50]"
               >
-                <Sparkles size={17} /> Watch Demo
-              </a>
+                <Sparkles size={17} />
+                Watch Demo
+              </button>
             </div>
           </div>
 
@@ -65,6 +75,9 @@ export default function Home() {
         </div>
       </section>
 
+      {/* =====================================================
+          HOW JOBGUARD WORKS
+      ===================================================== */}
       <section id="system" className="section-band">
         <SectionIntro
           tag="WHAT HAPPENS BEHIND THE SCENES"
@@ -74,8 +87,16 @@ export default function Home() {
 
         <div className="mx-auto grid max-w-7xl gap-4 px-5 sm:grid-cols-2 lg:grid-cols-4 lg:px-10">
           {[
-            [Link2, "Job Link", "Paste the job posting URL and start a scan."],
-            [Radar, "FastAPI", "The backend creates and manages your scan."],
+            [
+              Link2,
+              "Job Link",
+              "Paste the job posting URL and start a scan.",
+            ],
+            [
+              Radar,
+              "FastAPI",
+              "The backend creates and manages your scan.",
+            ],
             [
               Shield,
               "Sandbox",
@@ -97,6 +118,9 @@ export default function Home() {
         </div>
       </section>
 
+      {/* =====================================================
+          SIMPLE STEPS
+      ===================================================== */}
       <section className="px-5 py-20 lg:px-10">
         <SectionIntro
           tag="HOW IT WORKS"
@@ -132,7 +156,46 @@ export default function Home() {
         </div>
       </section>
 
+      {/* =====================================================
+          CTA
+      ===================================================== */}
       <Cta />
+
+      {/* =====================================================
+          YOUTUBE DEMO MODAL
+      ===================================================== */}
+      {showDemo && (
+        <div
+          className="fixed inset-0 z-[100] flex items-center justify-center bg-black/80 px-4 backdrop-blur-sm"
+          onClick={() => setShowDemo(false)}
+        >
+          <div
+            className="relative w-full max-w-5xl overflow-hidden rounded-2xl bg-black shadow-2xl"
+            onClick={(event) => event.stopPropagation()}
+          >
+            {/* Close Button */}
+            <button
+              type="button"
+              onClick={() => setShowDemo(false)}
+              className="absolute right-4 top-4 z-10 grid h-10 w-10 place-items-center rounded-full bg-black/70 text-white transition hover:bg-black"
+              aria-label="Close demo"
+            >
+              <X size={20} />
+            </button>
+
+            {/* YouTube Video */}
+            <div className="aspect-video w-full">
+              <iframe
+                className="h-full w-full"
+                src="https://www.youtube.com/embed/WayhRngpOgU?autoplay=1"
+                title="JobGuard AI Demo"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                allowFullScreen
+              />
+            </div>
+          </div>
+        </div>
+      )}
     </Layout>
   );
 }
